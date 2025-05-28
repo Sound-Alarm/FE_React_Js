@@ -1,0 +1,122 @@
+$blink-duration: 1s;
+$primary-color: #1890ff;
+$warning-color: #ff4d4f;
+$border-color: #d9d9d9;
+$hover-color: #40a9ff;
+$text-color: #262626;
+
+@keyframes warning-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba($warning-color, 0.7);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 0 15px rgba($warning-color, 0);
+        transform: scale(1.1);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba($warning-color, 0);
+        transform: scale(1);
+    }
+}
+
+@keyframes warning-shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+.audible-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+
+
+    &:hover {
+        background-color: rgba($primary-color, 0.04);
+    }
+
+    &__box {
+        width: 22px;
+        height: 22px;
+        border: 2px solid $border-color;
+        border-radius: 6px;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background-color: white;
+        flex-shrink: 0;
+        margin-right: 10px;
+
+        &:hover {
+            border-color: $hover-color;
+        }
+
+        &--warning {
+            background-color: white;
+            border-color: $warning-color;
+            animation:
+                warning-pulse 1.5s infinite,
+                warning-shake 0.5s infinite;
+
+            &::before {
+                content: '!';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: $warning-color;
+                font-weight: bold;
+                font-size: 16px;
+            }
+        }
+
+        &--checked {
+            background-color: $primary-color;
+            border-color: $primary-color;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 45%;
+                transform: translate(-50%, -50%) rotate(45deg);
+                width: 10px;
+                height: 12px;
+                border: 2px solid white;
+                border-top: 0;
+                border-left: 0;
+                transition: all 0.2s ease;
+            }
+        }
+    }
+
+    &__label {
+        font-size: 13px;
+        font-weight: 500;
+        color: $text-color;
+        user-select: none;
+        transition: color 0.3s ease;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover {
+            color: $primary-color;
+        }
+    }
+}
