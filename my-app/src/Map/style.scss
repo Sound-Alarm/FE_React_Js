@@ -1,74 +1,72 @@
-@import '../_styles/mixins.scss';
-@import '../_styles/variable.scss';
+@import "../_styles/mixins.scss";
+@import "../_styles/variable.scss";
 
 .wrapper-job {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin: 50px 0 24px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 50px 0 24px 0;
 
-    @media (max-width: $xl-max-width) {
-        grid-template-columns: repeat(3, 1fr);
+  @media (max-width: $xl-max-width) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: $sm-min-width) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $xs-max-width) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 8px;
+  }
+
+  &-element {
+    &-top {
+      font-size: 24px;
+      text-transform: uppercase;
+      color: #fff;
+      text-align: center;
+      padding: 16px 10px;
+
+      p {
+        margin: 0px;
+        font-weight: 500 !important;
+      }
     }
 
-    @media (max-width: $sm-min-width) {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    &-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgb(194, 190, 190);
 
-    @media (max-width: $xs-max-width) {
-        grid-template-columns: repeat(1, 1fr);
-        gap: 8px;
-    }
-
-    &-element {
-        &-top {
-            font-size: 24px;
-            text-transform: uppercase;
-            color: #fff;
-            text-align: left;
-            padding: 16px 10px;
-
-            p {
-                margin: 0px;
-                font-weight: 500 !important;
-            }
+      .ant-checkbox-group {
+        // width: 100%;
+        @media (max-width: $xs-max-width) {
+          padding: 4px 8px;
+          width: 100%;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
         }
+      }
 
-        &-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgb(194, 190, 190);
+      .ant-select-selector {
+        height: 50px !important;
+      }
 
-            .ant-checkbox-group {
-
-                // width: 100%;
-                @media (max-width: $xs-max-width) {
-                    padding: 4px 8px;
-                    width: 100%;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: space-between !important;
-                }
-            }
-
-            .ant-select-selector {
-                height: 50px !important;
-            }
-
-            .ant-checkbox-label {
-                color: #fff !important;
-            }
-        }
-
+      .ant-checkbox-label {
+        color: #fff !important;
+      }
     }
+  }
 }
 
 .job-dropdow {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: start;
-    text-align: start;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: start;
+  text-align: start;
 }
