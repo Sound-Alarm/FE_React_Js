@@ -1,4 +1,4 @@
-@import './_styles/mixins.scss';
+@import "./_styles/mixins.scss";
 
 * {
   margin: 0;
@@ -51,8 +51,8 @@ body {
     text-decoration: none;
   }
 
-  input[type='number']::-webkit-outer-spin-button,
-  input[type='number']::-webkit-inner-spin-button {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -106,25 +106,24 @@ body {
 }
 
 @media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 0) {
-
   select,
   select:focus,
   input,
   input:focus,
-  input[type='color'],
-  input[type='date'],
-  input[type='datetime'],
-  input[type='datetime-local'],
-  input[type='email'],
-  input[type='month'],
-  input[type='number'],
-  input[type='password'],
-  input[type='search'],
-  input[type='tel'],
-  input[type='text'],
-  input[type='time'],
-  input[type='url'],
-  input[type='week'],
+  input[type="color"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
   textarea,
   textarea:focus {
     font-size: 1.6rem !important;
@@ -132,7 +131,6 @@ body {
 }
 
 .sun-editor-editable-override {
-
   // font-family: unset !important;
   ul,
   ol {
@@ -143,7 +141,7 @@ body {
   }
 
   &::after {
-    content: '';
+    content: "";
     display: table;
     clear: both;
   }
@@ -227,4 +225,8 @@ body {
     width: 16px;
     height: 16px;
   }
+}
+
+.ant-picker {
+  width: 100%;
 }

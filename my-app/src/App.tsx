@@ -1,14 +1,15 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
-import Map from './Map/Map';
-import WorkshopDetail from './components/WorkshopDetail';
-import Login from './components/Login';
-import ProtectedRoute from './components/ProtectedRoute';
-import Notification from './components/Notification';
-import './globals.scss';
-import NotificationScreen from './NotificationScreen/NotificationScreen';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import Map from "./Map/Map";
+import WorkshopDetail from "./components/WorkshopDetail";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Notification from "./components/Notification";
+import "./globals.scss";
+import NotificationScreen from "./NotificationScreen/NotificationScreen";
+import NoteNofication from "./components/NoteNofication";
 
 function App() {
   return (
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <NotificationScreen />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/enter-notification"
+            element={
+              <ProtectedRoute>
+                <NoteNofication />
               </ProtectedRoute>
             }
           />
