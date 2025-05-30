@@ -1,0 +1,54 @@
+.header-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.exchange-rate {
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+}
+
+.wrapper-profile-admin {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+  }
+
+  .wrapper-profile-admin-text {
+    display: flex;
+    flex-direction: column;
+
+    &-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111;
+      margin: 0;
+      line-height: 30px !important;
+    }
+
+    &-role {
+      font-size: 13px;
+      color: #888;
+      line-height: 15px !important;
+    }
+  }
+
+  &:hover .wrapper-profile-admin-text-name {
+    color: #1677ff;
+  }
+}

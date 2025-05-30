@@ -10,6 +10,8 @@ import Notification from "./components/Notification";
 import "./globals.scss";
 import NotificationScreen from "./NotificationScreen/NotificationScreen";
 import NoteNofication from "./components/NoteNofication";
+import Register from "./components/Register";
+import HeaderAdmin from "./components/HeaderAdmin/HeaderAdmin";
 
 function App() {
   return (
@@ -17,12 +19,17 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/map"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
+              <div>
+                <HeaderAdmin />
                 <Map />
-              </ProtectedRoute>
+              </div>
+
+              // </ProtectedRoute>
             }
           />
           <Route
@@ -44,9 +51,12 @@ function App() {
           <Route
             path="/notification1"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
+              <div>
+                <HeaderAdmin />
                 <NotificationScreen />
-              </ProtectedRoute>
+              </div>
+              // </ProtectedRoute>
             }
           />
           <Route
