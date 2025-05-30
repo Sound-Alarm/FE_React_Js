@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCookie } from '../components/Login'; // hoặc tách getCookie ra file utils
 
 // Định nghĩa interface cho response
 interface LoginResponse {
@@ -20,7 +21,7 @@ const api = axios.create({
 // Hàm refresh token
 export const refreshToken = async (): Promise<string> => {
     try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = getCookie('refreshToken');
 
         if (!refreshToken) {
             handleAuthError('No refresh token found');
@@ -107,7 +108,7 @@ api.interceptors.response.use(
 
 // Export các hàm tiện ích
 export const getAuthToken = (): string | null => localStorage.getItem('accessToken');
-export const getRefreshToken = (): string | null => localStorage.getItem('refreshToken');
+export const getRefreshToken = (): string | null => getCookie('refreshToken');
 export const isAuthenticated = (): boolean => !!getAuthToken();
 
 // Export instance axios đã cấu hình

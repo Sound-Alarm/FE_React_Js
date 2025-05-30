@@ -12,6 +12,8 @@ import NotificationScreen from "./NotificationScreen/NotificationScreen";
 import NoteNofication from "./components/NoteNofication";
 import Register from "./components/Register";
 import HeaderAdmin from "./components/HeaderAdmin/HeaderAdmin";
+import AdminRoute from "./components/AdminRoute";
+import RegisterForm from "./components/Register";
 
 function App() {
   return (
@@ -19,7 +21,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<AdminRoute><RegisterForm /></AdminRoute>} />
           <Route
             path="/map"
             element={
@@ -66,6 +68,10 @@ function App() {
                 <NoteNofication />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/register"
+            element={<Register />}
           />
         </Routes>
       </div>

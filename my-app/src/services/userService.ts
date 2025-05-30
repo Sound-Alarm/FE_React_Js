@@ -1,0 +1,61 @@
+import axios, { refreshToken } from './axiosConfig';
+
+export interface RegisterForm {
+    username: string;
+    password: string;
+    email: string;
+    code: string;
+}
+export interface Role {
+    name: string;
+    code: string;
+}
+const API_URL = 'http://localhost:8080/api/users';
+
+export const userService = {
+    getAllRole: async (): Promise<Role[]> => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const response = await axios.get<Role[]>('/users/role', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            if (error?.response?.status === 403) {
+                console.log(error.response.data.message);
+            }
+            console.error('Error in getNotifications:', {
+                status: error?.response?.status,
+                message: error?.response?.data?.message || error.message,
+                error: error
+            });
+            throw error;
+        }
+    },
+    register: async (values: RegisterForm): Promise<any> => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post('/users/register', values, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log(response);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error in getNotifications:', {
+                status: error?.response?.status,
+                message: error?.response?.data?.message || error.message,
+                error: error
+            });
+            throw error;
+        }
+    }
+}
+

@@ -1,22 +1,57 @@
-import React from "react";
-import { Card, Form, Input, Button, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { Card, Form, Input, Button, Select, message } from "antd";
+import { userService } from "../services/userService";
 
 interface RegisterFormValues {
   username: string;
   password: string;
   email: string;
-  role: "manager" | "employee";
+  code: string;
 }
-
+interface Role {
+  name: string;
+  code: string;
+}
 const RegisterForm: React.FC = () => {
-  const roles = [
-    { label: "Quản lý", value: "code-01" },
-    { label: "Nhân viên", value: "code-02" },
-  ];
-  const onFinish = (values: RegisterFormValues) => {
-    console.log("Thông tin đăng ký:", values);
-    // Gửi request đăng ký tại đây
+
+  const [roles, setRoles] = useState<Role[]>([]);
+  const onFinish = async (values: RegisterFormValues) => {
+    try {
+      console.log("Thông tin đăng ký:", values);
+      const response = await userService.register(values);
+      console.log(response);
+      message.success("Đăng ký thành công!");
+    } catch (error: any) {
+      let msg = "Đăng ký thất bại!";
+      const resData = error?.response?.data;
+
+      if (typeof resData === "string") {
+        msg = resData;
+      } else if (resData?.message) {
+        msg = resData.message;
+      } else if (resData?.error) {
+        msg = resData.error;
+      }
+
+      console.error("Lỗi đăng ký:", resData);
+      message.error(msg);
+    }
   };
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const roles = await userService.getAllRole();
+        console.log("roles");
+        console.log(roles);
+        setRoles(roles);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchRole();
+  }, []);
 
   return (
     <div
@@ -67,8 +102,8 @@ const RegisterForm: React.FC = () => {
           >
             <Select size="large" placeholder="Chọn chức vụ">
               {roles.map((role: any) => (
-                <Select.Option key={role.value} value={role.value}>
-                  {role.label}
+                <Select.Option key={role.code} value={role.code}>
+                  {role.name}
                 </Select.Option>
               ))}
             </Select>

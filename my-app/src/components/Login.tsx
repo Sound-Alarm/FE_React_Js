@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Card, message } from "antd";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Card, message } from "antd";
 import axios from "../services/axiosConfig";
 
 interface LoginForm {
@@ -10,9 +10,25 @@ interface LoginForm {
 
 interface LoginResponse {
   accessToken: string;
+  refreshToken: string;
   username: string;
   role: string;
-  refreshToken: string;
+}
+
+function setRefreshTokenCookie(token: string) {
+  document.cookie = `refreshToken=${token}; path=/; max-age=604800; secure; samesite=strict`;
+}
+
+export function getCookie(name: string): string | null {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    const part = parts.pop();
+    if (part) {
+      return part.split(';').shift() || null;
+    }
+  }
+  return null;
 }
 
 const Login: React.FC = () => {
@@ -30,7 +46,8 @@ const Login: React.FC = () => {
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("role", response.data.role);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      // Lưu refreshToken vào cookie thường
+      setRefreshTokenCookie(response.data.refreshToken);
       message.success("Đăng nhập thành công!");
       navigate("/"); // Chuyển hướng về trang chủ
     } catch (error) {
