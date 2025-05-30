@@ -10,14 +10,24 @@ const NoteNofication = () => {
   const optionsStatus = [
     {
       key: "1",
-      value: "test",
-      label: "Received",
+      value: "notification_daily_0101",
+      label: "Thông báo hằng ngày",
     },
     {
       key: "2",
-      value: "test2",
-      label: "Processed",
+      value: "notification_daily_0101222",
+      label: "Thông báo khẩn cấp",
     },
+  ];
+
+  const optionsDaysOfWeek = [
+    { label: "Thứ Hai", value: "Monday" },
+    { label: "Thứ Ba", value: "Tuesday" },
+    { label: "Thứ Tư", value: "Wednesday" },
+    { label: "Thứ Năm", value: "Thursday" },
+    { label: "Thứ Sáu", value: "Friday" },
+    { label: "Thứ Bảy", value: "Saturday" },
+    { label: "Chủ Nhật", value: "Sunday" },
   ];
 
   return (
@@ -45,12 +55,23 @@ const NoteNofication = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={4} lg={4} xl={4}>
-              <Form.Item name="status" label="Loại thông báo">
+              <Form.Item name="code" label="Loại thông báo">
                 <Select
                   size="large"
                   style={{ textAlign: "left" }}
                   placeholder="Chọn thông báo"
                   options={optionsStatus}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12} md={4}>
+              <Form.Item name="day" label="Chọn thứ">
+                <Select
+                  size="large"
+                  style={{ textAlign: "left" }}
+                  placeholder="Chọn thứ"
+                  mode="multiple"
+                  options={optionsDaysOfWeek}
                 />
               </Form.Item>
             </Col>
