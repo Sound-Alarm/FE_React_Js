@@ -26,6 +26,7 @@ $text-color: #262626;
 }
 
 @keyframes warning-shake {
+
   0%,
   100% {
     transform: translateX(0);
@@ -120,14 +121,15 @@ $text-color: #262626;
   }
 }
 
-.wrapper-job-element-bottom {
-  width: 100%;
-  overflow-x: auto;
-}
+// .wrapper-job-element-bottom {
+//   width: 100%;
+//   overflow-x: auto;
+// }
+
 .content-bottom {
-  max-height: 410px;
+  max-height: 710px;
   overflow-y: auto;
-//   max-width: 350px;
+  //   max-width: 350px;
 
   @media (max-width: 575px) {
     max-width: 570px !important;

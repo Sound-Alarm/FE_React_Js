@@ -26,7 +26,11 @@ const AudibleCheckbox: React.FC<AudibleCheckboxProps> = ({ isWarning, label, dis
                     checked ? 'audible-checkbox__box--checked' : ''
                     }`}
             />
-            {label && <span className="audible-checkbox__label">Tổ {label}</span>}
+            {label && <span style={{
+                color: isWarning
+                    ? "#ffffff "
+                    : "#000000",
+            }} className="audible-checkbox__label">Tổ {label}</span>}
         </div>
     );
 };

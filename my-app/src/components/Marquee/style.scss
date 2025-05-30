@@ -1,0 +1,58 @@
+@import "../../_styles/mixins.scss";
+@import "../../_styles/variable.scss";
+
+.marquee-container {
+    width: 100vw; // Chiếm toàn bộ chiều ngang màn hình
+    overflow: hidden;
+    height: 40px; // hoặc chiều cao bạn muốn
+    display: flex;
+    align-items: center;
+    background: #fffbe6; // tuỳ chỉnh
+    position: relative;
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 30px;
+    font-weight: 700;
+
+
+    position: absolute;
+    left: 100vw; // Bắt đầu ngoài màn hình bên phải
+    will-change: transform;
+
+    @media (max-width: 575px) {
+        font-size: 20px;
+        font-weight: 400;
+    }
+}
+
+.marquee-content.animate {
+    animation: marquee-desktop linear forwards;
+
+    @media (max-width: 575px) {
+        animation: marquee-mobile linear forwards;
+    }
+}
+
+@keyframes marquee-desktop {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-160vw);
+    }
+}
+
+// Mobile animation
+@keyframes marquee-mobile {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-220vw);
+    }
+}

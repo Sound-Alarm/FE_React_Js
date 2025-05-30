@@ -29,8 +29,8 @@ interface ConveyorBelt {
 
 interface NotificationReponse {
     id: string;
-    tieuDe: string;
-    noiDung: string;
+    title: string;
+    content: string;
     type: string;
     jobTypeId: number;
     indexTeam: number[];
@@ -40,8 +40,8 @@ interface NotificationReponse {
     conveyorBelt: ConveyorBelt,
 }
 interface NotificationRequest {
-    tieuDe: string;
-    noiDung: string;
+    title: string;
+    content: string;
     type: string;
     jobTypeId: number;
     indexTeam: number[];

@@ -19,6 +19,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import AudibleCheckbox from "./AudibleCheckbox";
 import NoteNofication from "../components/NoteNofication";
+import Marquee from "../components/Marquee/Marquee";
 
 interface Workshop {
   id: string;
@@ -47,8 +48,8 @@ interface ConveyorBelt {
 
 interface NotificationRequest {
   id: string;
-  tieuDe: string;
-  noiDung: string;
+  title: string;
+  content: string;
   type: string;
   jobTypeId: number;
   indexTeam: number[];
@@ -284,13 +285,13 @@ const NotificationScreen = () => {
   }, [currentReadingIndex, notifications]);
 
   const speakNotification = (notification: NotificationRequest) => {
-    if (!notification.noiDung) {
+    if (!notification.content) {
       message.warning("Không có nội dung để đọc");
       return;
     }
 
     if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(notification.noiDung);
+      const utterance = new SpeechSynthesisUtterance(notification.content);
 
       if (selectedVoice) {
         utterance.voice = selectedVoice;
@@ -344,9 +345,14 @@ const NotificationScreen = () => {
   return (
     <div>
       <div>
-        <Row gutter={[16, 16]}>
-          {jobTypeEnum.length > 0
-            ? jobTypeEnum.map((item) => (
+        {notifications.length > 0 &&
+          <Marquee content={notifications} />
+        }
+
+        <div >
+          <Row gutter={[16, 16]}>
+            {jobTypeEnum.length > 0
+              ? jobTypeEnum.map((item) => (
                 <Col key={item?.id} xs={24} sm={24} md={24} lg={24} xl={6}>
                   <div style={{ cursor: "pointer" }}>
                     <div
@@ -439,30 +445,35 @@ const NotificationScreen = () => {
                                         gap: 8,
                                         marginBottom: 6,
                                         background: isChecked
-                                          ? "#ffeaea"
-                                          : "transparent",
+                                          ? "#1A1A40"
+                                          : "rgb(194, 190, 190)",
                                         borderRadius: 6,
                                         padding: "4px 8px",
+                                        border: "1px solid #000",
+                                        marginTop: 6,
+                                        color: isChecked
+                                          ? "white !important"
+                                          : "black !important",
                                       }}
                                     >
                                       <div
                                         onClick={
                                           isChecked && notification.id
                                             ? () =>
-                                                turnOffNotifications(
-                                                  notification.id,
-                                                  [team.index]
-                                                )
-                                            : () => {}
+                                              turnOffNotifications(
+                                                notification.id,
+                                                [team.index]
+                                              )
+                                            : () => { }
                                         }
                                       >
                                         <AudibleCheckbox
-                                          label={`Tổ ${team?.index}`}
+                                          label={` ${team?.index}`}
                                           isWarning={isChecked}
                                           disabled={true}
                                         />
                                       </div>
-                                      {notification && (
+                                      {/* {notification && (
                                         <Button
                                           type="text"
                                           size="small"
@@ -482,7 +493,7 @@ const NotificationScreen = () => {
                                         >
                                           🔊
                                         </Button>
-                                      )}
+                                      )} */}
                                     </div>
                                   );
                                 })}
@@ -494,8 +505,9 @@ const NotificationScreen = () => {
                   </div>
                 </Col>
               ))
-            : null}
-        </Row>
+              : null}
+          </Row>
+        </div>
       </div>
       {isSpeaking && (
         <Button
