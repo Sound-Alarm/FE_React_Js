@@ -7,19 +7,59 @@ interface RegisterFormValues {
   password: string;
   email: string;
   code: string;
+  conveyorBelt: ConveyorBelt;
 }
 interface Role {
   name: string;
   code: string;
 }
+export interface ConveyorBelt {
+  id: string;
+  name: string;
+  index: number;
+  clusters: Clusters[];
+}
+
+
+interface Clusters {
+  name: string;
+  index: number;
+}
+export interface ConveyorBeltRequest {
+  id: string;
+  name: string;
+  index: number;
+  clusters: ClustersRequest[];
+}
+
+
+interface ClustersRequest {
+  name: string;
+  index: number;
+}
 const RegisterForm: React.FC = () => {
 
   const [roles, setRoles] = useState<Role[]>([]);
+  const [conveyorBelts, setConveyorBelts] = useState<ConveyorBelt[]>([]);
+  const [selectedConveyorBelt, setSelectedConveyorBelt] = useState<ConveyorBeltRequest | null>(null);
+  const [clusters, setClusters] = useState<Clusters[]>([]);
+  const [selectedCluster, setSelectedCluster] = useState<ClustersRequest | null>(null);
   const onFinish = async (values: RegisterFormValues) => {
     try {
       console.log("Thông tin đăng ký:", values);
-      const response = await userService.register(values);
-      console.log(response);
+      if (!selectedConveyorBelt) {
+        message.error("Vui lòng chọn băng chuyền!");
+        return;
+      }
+      let userForm = {
+        username: values.username,
+        password: values.password,
+        email: values.email,
+        code: values.code,
+        conveyorBelt: selectedConveyorBelt,
+      }
+      const response = await userService.register(userForm);
+      console.log(userForm);
       message.success("Đăng ký thành công!");
     } catch (error: any) {
       let msg = "Đăng ký thất bại!";
@@ -49,8 +89,18 @@ const RegisterForm: React.FC = () => {
         console.log(err);
       }
     };
-
+    const fetchConveyorBelt = async () => {
+      try {
+        const conveyorBelts = await userService.getAllConveyorBelt();
+        console.log("conveyorBelts");
+        console.log(conveyorBelts);
+        setConveyorBelts(conveyorBelts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchRole();
+    fetchConveyorBelt();
   }, []);
 
   return (
@@ -104,6 +154,64 @@ const RegisterForm: React.FC = () => {
               {roles.map((role: any) => (
                 <Select.Option key={role.code} value={role.code}>
                   {role.name}
+                </Select.Option>
+              ))}
+            </Select>
+
+          </Form.Item>
+          <Form.Item
+            label="Vị trí làm việc"
+            name="code"
+            style={{ textAlign: "left" }}
+            rules={[{ required: true, message: "Vui lòng chọn chức vụ!" }]}
+          >
+            <Select
+              size="large"
+              placeholder="Chọn băng chuyền"
+              onChange={(value) => {
+                setSelectedConveyorBelt(null);
+                setSelectedCluster(null);
+                setClusters([]);
+                const selectedBelt = conveyorBelts.find((belt: any) => belt.id === value);
+                if (selectedBelt) {
+                  setSelectedConveyorBelt({
+                    id: selectedBelt.id,
+                    name: selectedBelt.name,
+                    index: selectedBelt.index,
+                    clusters: [],
+                  });
+                  console.log("selectedBelt", selectedBelt);
+                  setClusters(selectedBelt.clusters);
+                  console.log("conveyorBelt.clusters", selectedBelt.clusters);
+                }
+              }}
+            >
+              {conveyorBelts.map((conveyorBelt: any) => (
+                <Select.Option key={conveyorBelt.id} value={conveyorBelt.id}>
+                  {conveyorBelt.name}
+                </Select.Option>
+              ))}
+            </Select>
+            <Select
+              size="large"
+              placeholder="Chọn vị trí làm việc"
+              value={selectedCluster?.index ?? undefined}
+              onChange={(value) => {
+                const selectedCluster = clusters.find((cluster: any) => cluster.index === value);
+                if (selectedCluster) {
+                  setSelectedCluster(selectedCluster);
+                  setSelectedConveyorBelt(prev =>
+                    prev
+                      ? { ...prev, clusters: [selectedCluster] }
+                      : null
+                  );
+                  console.log("selectedCluster", selectedConveyorBelt);
+                }
+              }}
+            >
+              {clusters.map((cluster: any) => (
+                <Select.Option key={cluster.index} value={cluster.index}>
+                  {cluster.name}
                 </Select.Option>
               ))}
             </Select>

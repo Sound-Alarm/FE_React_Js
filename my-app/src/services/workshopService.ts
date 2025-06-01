@@ -1,6 +1,4 @@
-import axios, { refreshToken } from './axiosConfig';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+import axios from './axiosConfig';
 
 interface Workshop {
     id: string;

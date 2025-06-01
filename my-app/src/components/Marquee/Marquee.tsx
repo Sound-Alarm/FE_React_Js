@@ -1,6 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './style.scss';
 
+interface Teams {
+    name: string;
+    index: number;
+}
+
+interface Clusters {
+    name: string;
+    index: number;
+    teams: Teams[];
+}
+
+interface ConveyorBelt {
+    name: string;
+    index: number;
+    clusters: Clusters[];
+}
+
 interface NotificationRequest {
     id: string;
     title: string;
@@ -10,9 +27,12 @@ interface NotificationRequest {
     indexTeam: number[];
     thoiGianTao?: string;
     nameJobType: string;
+    totalTeam: Teams[];
+    custer: Clusters;
+    conveyorBelt: ConveyorBelt;
 }
 
-const Marquee: React.FC<{ content: NotificationRequest[] }> = ({ content }) => {
+const Marquee: React.FC<{ content: NotificationRequest[], onMarqueeChange?: (notification: NotificationRequest) => void }> = ({ content, onMarqueeChange }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(true);
 
@@ -20,6 +40,13 @@ const Marquee: React.FC<{ content: NotificationRequest[] }> = ({ content }) => {
     useEffect(() => {
         setCurrentIndex(0);
     }, [content]);
+
+    useEffect(() => {
+        if (onMarqueeChange && content.length > 0) {
+            onMarqueeChange(content[currentIndex]);
+        }
+        // eslint-disable-next-line
+    }, [currentIndex, content]);
 
     if (!content || content.length === 0) return null;
 
@@ -40,7 +67,6 @@ const Marquee: React.FC<{ content: NotificationRequest[] }> = ({ content }) => {
 
     // Độ dài chuỗi hiện tại
     const textLength = currentContent.length;
-
 
     const baseSpeed = 12;
     const mobileSpeed = 12;

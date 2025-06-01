@@ -14,7 +14,7 @@ import Register from "./components/Register";
 import HeaderAdmin from "./components/HeaderAdmin/HeaderAdmin";
 import AdminRoute from "./components/AdminRoute";
 import RegisterForm from "./components/Register";
-
+import TextToSpeech from "./components/TextToSpeech";
 function App() {
   return (
     <BrowserRouter>
@@ -73,7 +73,9 @@ function App() {
             path="/register"
             element={<Register />}
           />
+          <Route path="/text-to-speech" element={<TextToSpeech />} />
         </Routes>
+
       </div>
     </BrowserRouter>
   );

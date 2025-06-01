@@ -31,10 +31,10 @@ export const refreshToken = async (): Promise<string> => {
         const response = await api.post<LoginResponse>('/users/refresh-token', { refreshToken });
 
         // Lưu thông tin mới vào localStorage
-        const { accessToken, username, role } = response.data;
+        const { accessToken, username } = response.data;
 
         // Lưu thông tin vào localStorage
-        saveAuthData(accessToken, username, role);
+        saveAuthData(accessToken, username);
 
         return accessToken;
     } catch (error) {
@@ -55,11 +55,9 @@ const handleAuthError = (error: unknown): void => {
 const saveAuthData = (
     accessToken: string,
     username: string,
-    role: string
 ): void => {
     localStorage.setItem('token', accessToken);
     localStorage.setItem('username', username);
-    localStorage.setItem('role', role);
 };
 
 // Interceptor cho request

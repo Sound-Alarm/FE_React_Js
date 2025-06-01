@@ -91,6 +91,7 @@ const NotificationScreen = () => {
     useState<SpeechSynthesisVoice | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentReadingIndex, setCurrentReadingIndex] = useState<number>(0);
+  const [canAutoSpeak, setCanAutoSpeak] = useState(false);
 
   let jobTypeEnum: JobType[] = [
     {
@@ -242,19 +243,16 @@ const NotificationScreen = () => {
     // Lấy danh sách giọng đọc có sẵn
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
+      console.log("Available voices:", availableVoices); // Log danh sách voices
       setVoices(availableVoices);
 
-      // Tìm giọng tiếng Việt
+      // Ưu tiên tiếng Việt, fallback sang giọng đầu tiên
       const vietnameseVoice = availableVoices.find(
-        (voice) => voice.lang === "vi-VN" || voice.name.includes("Vietnamese")
+        (voice) => voice.lang === "vi-VN" || voice.name.toLowerCase().includes("vietnamese")
       );
-
-      if (vietnameseVoice) {
-        setSelectedVoice(vietnameseVoice);
-      } else {
-        message.warning(
-          "Không tìm thấy giọng đọc tiếng Việt. Vui lòng cài đặt gói ngôn ngữ tiếng Việt cho hệ thống."
-        );
+      setSelectedVoice(vietnameseVoice || availableVoices[0] || null);
+      if (!vietnameseVoice) {
+        message.warning("Không tìm thấy giọng đọc tiếng Việt, sẽ dùng giọng mặc định.");
       }
     };
 
@@ -278,14 +276,29 @@ const NotificationScreen = () => {
   }, [notifications]);
 
   useEffect(() => {
-    if (notifications.length > 0 && !isSpeaking) {
-      speakNotification(notifications[currentReadingIndex]);
+    // Khi người dùng click hoặc nhấn phím, cho phép tự động đọc
+    const handleUserInteraction = () => setCanAutoSpeak(true);
+    window.addEventListener('click', handleUserInteraction, { once: true });
+    window.addEventListener('keydown', handleUserInteraction, { once: true });
+    return () => {
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (canAutoSpeak && notifications.length > 0 && !isSpeaking) {
+      const safeIndex = Math.min(currentReadingIndex, notifications.length - 1);
+      const notification = notifications[safeIndex];
+      if (notification && notification.content) {
+        speakNotification(notification);
+      }
     }
     // eslint-disable-next-line
-  }, [currentReadingIndex, notifications]);
+  }, [canAutoSpeak, currentReadingIndex, notifications]);
 
-  const speakNotification = (notification: NotificationRequest) => {
-    if (!notification.content) {
+  const speakNotification = (notification?: NotificationRequest) => {
+    if (!notification || !notification.content || typeof notification.content !== 'string') {
       message.warning("Không có nội dung để đọc");
       return;
     }
@@ -296,10 +309,7 @@ const NotificationScreen = () => {
       if (selectedVoice) {
         utterance.voice = selectedVoice;
         utterance.lang = selectedVoice.lang;
-      } else {
-        message.error("Không tìm thấy giọng đọc tiếng Việt");
-        return;
-      }
+      } // Nếu không có selectedVoice, dùng giọng mặc định
 
       utterance.rate = 0.68;
       utterance.pitch = 2.0;
@@ -318,7 +328,8 @@ const NotificationScreen = () => {
       };
       utterance.onerror = (event) => {
         setIsSpeaking(false);
-        message.error("Có lỗi xảy ra khi đọc thông báo");
+        console.error("SpeechSynthesis error:", event);
+        message.error("Có lỗi xảy ra khi đọc thông báo: " + (event.error || JSON.stringify(event)));
       };
 
       window.speechSynthesis.speak(utterance);
@@ -344,11 +355,20 @@ const NotificationScreen = () => {
 
   return (
     <div>
+      {!canAutoSpeak && (
+        <Button type="primary" onClick={() => setCanAutoSpeak(true)} style={{ marginBottom: 16 }}>
+          Bấm vào đây để bật đọc thông báo tự động
+        </Button>
+      )}
       <div>
-        {notifications.length > 0 &&
-          <Marquee content={notifications} />
-        }
-
+        <Marquee
+          content={notifications}
+          onMarqueeChange={(notification) => {
+            if (canAutoSpeak && notification && notification.content) {
+              speakNotification(notification);
+            }
+          }}
+        />
         <div >
           <Row gutter={[16, 16]}>
             {jobTypeEnum.length > 0
