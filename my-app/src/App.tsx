@@ -15,6 +15,7 @@ import HeaderAdmin from "./components/HeaderAdmin/HeaderAdmin";
 import AdminRoute from "./components/AdminRoute";
 import RegisterForm from "./components/Register";
 import { getRoleFromToken } from "./utils/jwtUtils";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
 // import TextToSpeech from "./components/TextToSpeech";
 function App() {
 
@@ -57,10 +58,12 @@ function App() {
             path="/notification1"
             element={
               <ProtectedRoute>
-                <div>
-                  <HeaderAdmin />
-                  <NotificationScreen />
-                </div>
+                <RoleProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
+                  <div>
+                    <HeaderAdmin />
+                    <NotificationScreen />
+                  </div>
+                </RoleProtectedRoute>
               </ProtectedRoute>
             }
           />
@@ -68,7 +71,9 @@ function App() {
             path="/enter-notification"
             element={
               <ProtectedRoute>
-                <NoteNofication />
+                <RoleProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
+                  <NoteNofication />
+                </RoleProtectedRoute>
               </ProtectedRoute>
             }
           />

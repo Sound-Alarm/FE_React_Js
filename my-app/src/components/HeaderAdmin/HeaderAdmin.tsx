@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Button, Popover, Space } from "antd";
+import { Layout, Button, Popover, Space, Flex } from "antd";
 import axios from 'axios';
 import "./header.scss";
 import AppConfirmModal from "../AppConfirmModal/AppConfirmModal";
@@ -46,13 +46,23 @@ function HeaderAdmin() {
     <>
       <Header className="header-admin" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          {role !== "USER" && <Button
-            type="primary"
-            size="large"
-            onClick={() => navigate("/register")}
-          >
-            Tạo nhân viên
-          </Button>
+          {role !== "USER" &&
+            <Flex gap="small" align="center">
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => navigate("/register")}
+              >
+                Tạo nhân viên
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => navigate("/enter-notification")}
+              >
+                Tạo thông báo
+              </Button>
+            </Flex>
           }
         </div>
         <div>

@@ -1,4 +1,4 @@
-import axios from './axiosConfig';
+import axios, { refreshToken } from './axiosConfig';
 
 interface Workshop {
     id: string;
@@ -24,6 +24,16 @@ interface ConveyorBelt {
     index: number;
     clusters: Clusters[];
 }
+interface notificationPayload {
+    content: string;
+    typeNotification: {
+        id: string;
+        code: string;
+        name: string;
+    };
+    timeAt: number;
+    listOfReleaseDates: string[];
+}
 
 interface NotificationReponse {
     id: string;
@@ -36,6 +46,11 @@ interface NotificationReponse {
     nameJobType: string;
     custer: Clusters,
     conveyorBelt: ConveyorBelt,
+}
+interface NoteNotificationReponse {
+    id: string;
+    code: string;
+    name: string;
 }
 interface NotificationRequest {
     title: string;
@@ -203,6 +218,80 @@ export const workshopService = {
             });
             throw error;
         }
-    }
+    },
 
+    // Lấy danh sách thông báo
+    getNoteNotifications: async (): Promise<NoteNotificationReponse[]> => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const response = await axios.get<NoteNotificationReponse[]>('/thongbao/type_notification', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+
+
+            return response.data;
+        } catch (error: any) {
+            if (error?.response?.status === 401) {
+
+            }
+            console.error('Error in getNotifications:', {
+                status: error?.response?.status,
+                message: error?.response?.data?.message || error.message,
+                error: error
+            });
+            throw error;
+        }
+    },
+
+    postNotification: async (values: notificationPayload): Promise<void> => {
+        try {
+            let token = localStorage.getItem("token");
+            console.log("Token for notification:", token);
+
+            const response = await axios.post("/thongbao/create_emergency_notice", values, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log("Notification response:", response.data);
+        } catch (error: any) {
+            if (error?.response?.status === 401) {
+                try {
+                    console.warn("Token expired, refreshing...");
+
+                    await refreshToken(); // Giả định hàm này sẽ cập nhật token mới vào localStorage
+                    const newToken = localStorage.getItem("token");
+
+                    const retryResponse = await axios.post("/thongbao/create_emergency_notice", values, {
+                        headers: {
+                            Authorization: `Bearer ${newToken}`,
+                        },
+                    });
+
+                    console.log("Retry notification response:", retryResponse.data);
+                } catch (retryError: any) {
+                    console.error("Retry after refresh failed:", {
+                        status: retryError?.response?.status,
+                        message: retryError?.response?.data?.message || retryError.message,
+                    });
+                    throw retryError;
+                }
+            } else {
+                console.error("Error in postNotification:", {
+                    status: error?.response?.status,
+                    message: error?.response?.data?.message || error.message,
+                    error: error,
+                });
+                throw error;
+            }
+        }
+    },
 }; 
