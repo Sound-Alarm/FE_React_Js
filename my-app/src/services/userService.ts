@@ -8,6 +8,10 @@ export interface RegisterForm {
     code: string;
     conveyorBelt: ConveyorBeltRequest;
 }
+interface LogOutResponse {
+    username: string;
+}
+
 export interface Role {
     name: string;
     code: string;
@@ -111,6 +115,25 @@ export const userService = {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post('/users/register', values, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log(response);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error in getNotifications:', {
+                status: error?.response?.status,
+                message: error?.response?.data?.message || error.message,
+                error: error
+            });
+            throw error;
+        }
+    },
+    logout: async (userName: string): Promise<any> => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`/users/logout?userName=${userName}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -14,8 +14,11 @@ import Register from "./components/Register";
 import HeaderAdmin from "./components/HeaderAdmin/HeaderAdmin";
 import AdminRoute from "./components/AdminRoute";
 import RegisterForm from "./components/Register";
-import TextToSpeech from "./components/TextToSpeech";
+import { getRoleFromToken } from "./utils/jwtUtils";
+// import TextToSpeech from "./components/TextToSpeech";
 function App() {
+
+  const role = getRoleFromToken(localStorage.getItem('token') as string);
   return (
     <BrowserRouter>
       <div className="App">
@@ -25,13 +28,13 @@ function App() {
           <Route
             path="/map"
             element={
-              // <ProtectedRoute>
-              <div>
-                <HeaderAdmin />
-                <Map />
-              </div>
+              <ProtectedRoute>
+                <div>
+                  <HeaderAdmin />
+                  <Map />
+                </div>
 
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -53,12 +56,12 @@ function App() {
           <Route
             path="/notification1"
             element={
-              // <ProtectedRoute>
-              <div>
-                <HeaderAdmin />
-                <NotificationScreen />
-              </div>
-              // </ProtectedRoute>
+              <ProtectedRoute>
+                <div>
+                  <HeaderAdmin />
+                  <NotificationScreen />
+                </div>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -73,7 +76,7 @@ function App() {
             path="/register"
             element={<Register />}
           />
-          <Route path="/text-to-speech" element={<TextToSpeech />} />
+          {/* <Route path="/text-to-speech" element={<TextToSpeech />} /> */}
         </Routes>
 
       </div>

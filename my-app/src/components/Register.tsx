@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Form, Input, Button, Select, message } from "antd";
 import { userService } from "../services/userService";
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormValues {
   username: string;
@@ -38,7 +39,7 @@ interface ClustersRequest {
   index: number;
 }
 const RegisterForm: React.FC = () => {
-
+  const navigate = useNavigate();
   const [roles, setRoles] = useState<Role[]>([]);
   const [conveyorBelts, setConveyorBelts] = useState<ConveyorBelt[]>([]);
   const [selectedConveyorBelt, setSelectedConveyorBelt] = useState<ConveyorBeltRequest | null>(null);
@@ -162,11 +163,12 @@ const RegisterForm: React.FC = () => {
           <Form.Item
             label="Vị trí làm việc"
             name="code"
-            style={{ textAlign: "left" }}
+            style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: "10px" }}
             rules={[{ required: true, message: "Vui lòng chọn chức vụ!" }]}
           >
             <Select
               size="large"
+              style={{ marginBottom: "12px" }}
               placeholder="Chọn băng chuyền"
               onChange={(value) => {
                 setSelectedConveyorBelt(null);
@@ -220,6 +222,9 @@ const RegisterForm: React.FC = () => {
           <Form.Item>
             <Button size="large" type="primary" htmlType="submit" block>
               Đăng ký
+            </Button>
+            <Button style={{ border: " none", boxShadow: "none", textDecoration: "underline" }} size="large" block onClick={() => navigate(-1)}>
+              Quay lại
             </Button>
           </Form.Item>
         </Form>

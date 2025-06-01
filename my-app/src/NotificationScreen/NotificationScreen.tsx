@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Checkbox,
   Col,
@@ -80,6 +80,7 @@ interface SelectedTeam {
 
 const NotificationScreen = () => {
   const [loading, setLoading] = useState(true);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [form] = Form.useForm();
   const [teams, setTeams] = useState<Teams[]>([]);
   const [selectedTeams, setSelectedTeams] = useState<SelectedTeam[]>([]);
@@ -236,6 +237,9 @@ const NotificationScreen = () => {
 
     return () => {
       client.deactivate();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
   }, []);
 
@@ -318,10 +322,9 @@ const NotificationScreen = () => {
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => {
         setIsSpeaking(false);
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           setCurrentReadingIndex((prev) => {
             if (notifications.length === 0) return 0;
-            // Đọc lặp lại từ đầu nếu còn notifications
             return (prev + 1) % notifications.length;
           });
         }, 1000); // nghỉ 0.5s giữa các lần đọc
@@ -356,7 +359,7 @@ const NotificationScreen = () => {
   return (
     <div>
       {!canAutoSpeak && (
-        <Button type="primary" onClick={() => setCanAutoSpeak(true)} style={{ marginBottom: 16 }}>
+        <Button size="large" type="primary" onClick={() => setCanAutoSpeak(true)} style={{ marginBottom: 16, marginTop: 16 }}>
           Bấm vào đây để bật đọc thông báo tự động
         </Button>
       )}
@@ -370,7 +373,7 @@ const NotificationScreen = () => {
           }}
         />
         <div >
-          <Row gutter={[16, 16]}>
+          <Row gutter={[0, 16]}>
             {jobTypeEnum.length > 0
               ? jobTypeEnum.map((item) => (
                 <Col key={item?.id} xs={24} sm={24} md={24} lg={24} xl={6}>
@@ -468,7 +471,7 @@ const NotificationScreen = () => {
                                           ? "#1A1A40"
                                           : "rgb(194, 190, 190)",
                                         borderRadius: 6,
-                                        padding: "4px 8px",
+                                        // padding: "4px 8px",
                                         border: "1px solid #000",
                                         marginTop: 6,
                                         color: isChecked

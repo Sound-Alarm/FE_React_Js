@@ -69,6 +69,8 @@ const Map = () => {
   const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
   const checkboxRefs = useRef<Record<number, any>>({});
 
+  const role = getRoleFromToken(localStorage.getItem('token') as string);
+
   const jobTypeEnum: JobType[] = [
     { id: 1, title: 'Cơ điện', color: 'red' },
     { id: 2, title: 'Tổ cắt', color: 'green' },
@@ -95,7 +97,7 @@ const Map = () => {
       console.log("selectedTeams", selectedTeams);
       const notificationData: NotificationRequest = {
         title: 'Thông báo yêu cầu hỗ trợ',
-        content: `${selectedConveyorBelt.name} ${selectedClusters.name} ${teams.filter(t => (jobType.indexTeam || []).includes(t.index)).map(t => `Tổ ${t.index}`).join(', ')} Yêu cầu ${jobType.title}`,
+        content: `${selectedConveyorBelt.name} ${selectedClusters.name} ${teams.filter(t => (jobType.indexTeam || []).includes(t.index)).map(t => `Tổ ${t.index}`).join(', ')} máy hỏng cần ${jobType.title}`,
         type: 'Yêu cầu hỗ trợ',
         jobTypeId: jobType.id,
         nameJobType: jobType.title,
@@ -190,7 +192,6 @@ const Map = () => {
     }
 
   }, []);
-
 
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}><Spin size="large" /></div>;
 

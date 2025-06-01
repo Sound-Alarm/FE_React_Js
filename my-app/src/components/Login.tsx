@@ -49,7 +49,12 @@ const Login: React.FC = () => {
       // Lưu refreshToken vào cookie thường
       setRefreshTokenCookie(response.data.refreshToken);
       message.success("Đăng nhập thành công!");
-      navigate("/"); // Chuyển hướng về trang chủ
+      if (response.data.role.toLocaleUpperCase() === "ADMIN") {
+        navigate("/notification1");
+      } else {
+        navigate("/map");
+      }
+      // Chuyển hướng về trang chủ
     } catch (error) {
       message.error("Đăng nhập thất bại!");
     }
