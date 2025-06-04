@@ -1,0 +1,18 @@
+.reading-animation {
+    animation: pulse 1.5s infinite;
+    border: 2px solid #1890ff;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+    }
+}

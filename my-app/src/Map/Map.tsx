@@ -107,7 +107,8 @@ const Map = () => {
         custer: selectedClusters
       };
 
-      await workshopService.sendNotification(notificationData);
+      let response = await workshopService.sendNotification(notificationData);
+
       message.success({ content: 'Đã gửi thông báo thành công', duration: 3, style: { marginTop: '20vh' } });
     } catch (error: any) {
       if (error?.response?.status === 401) {

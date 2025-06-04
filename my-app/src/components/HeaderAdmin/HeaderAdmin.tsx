@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Button, Popover, Space, Flex } from "antd";
+import { Layout, Button, Popover, Space, Flex, Modal } from "antd";
 import axios from 'axios';
 import "./header.scss";
 import AppConfirmModal from "../AppConfirmModal/AppConfirmModal";
@@ -8,6 +8,9 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../services/userService";
 import { getRoleFromToken } from "../../utils/jwtUtils";
+import OfflineNotificationReader from "../OfflineNotificationReader";
+import NoteNoficationModal from '../NoteNofication/NoteNoficationModal';
+import { MenuOutlined, NotificationOutlined, SoundOutlined, CloseOutlined } from '@ant-design/icons';
 
 const { Header } = Layout;
 
@@ -17,16 +20,17 @@ function HeaderAdmin() {
   const navigate = useNavigate();
   const [confirmLogoutVisible, setShowConfirmLogoutVisible] =
     useState<boolean>(false);
+  const [offlineReaderVisible, setOfflineReaderVisible] = useState<boolean>(false);
   const [info, setInfo] = useState({
     role: "",
     username: "",
   });
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
 
   useEffect(() => {
     setInfo({
       role: localStorage.getItem("role") as string,
       username: localStorage.getItem("username") as string,
-
     });
   }, [
     localStorage.getItem("role"),
@@ -58,9 +62,18 @@ function HeaderAdmin() {
               <Button
                 type="primary"
                 size="large"
-                onClick={() => navigate("/enter-notification")}
+                onClick={() => setIsNotificationModalOpen(true)}
+                icon={<NotificationOutlined />}
               >
                 Tạo thông báo
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => setOfflineReaderVisible(true)}
+                icon={<SoundOutlined />}
+              >
+                Đọc thông báo offline
               </Button>
             </Flex>
           }
@@ -92,6 +105,41 @@ function HeaderAdmin() {
           </Popover>
         </div>
       </Header>
+
+      <Modal
+        title={
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Đọc thông báo offline</span>
+            <Button
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={() => setOfflineReaderVisible(false)}
+              style={{ marginRight: -12 }}
+            />
+          </div>
+        }
+        open={offlineReaderVisible}
+        onCancel={() => setOfflineReaderVisible(false)}
+        footer={null}
+        width={1000}
+        destroyOnClose
+        closeIcon={null}
+        maskClosable={false}
+        centered={false}
+        style={{ top: 50 }}
+        bodyStyle={{
+          maxHeight: 'calc(100vh - 250px)',
+          overflowY: 'auto',
+          padding: '24px'
+        }}
+      >
+        <OfflineNotificationReader />
+      </Modal>
+
+      <NoteNoficationModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+      />
 
       <AppConfirmModal
         isVisible={confirmLogoutVisible}

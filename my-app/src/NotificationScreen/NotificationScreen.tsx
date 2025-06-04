@@ -20,7 +20,7 @@ import { Client } from "@stomp/stompjs";
 import AudibleCheckbox from "./AudibleCheckbox";
 import NoteNofication from "../components/NoteNofication";
 import Marquee from "../components/Marquee/Marquee";
-
+import TextReader from "../components/TextReader";
 interface Workshop {
   id: string;
   code: string;
@@ -243,52 +243,52 @@ const NotificationScreen = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Lấy danh sách giọng đọc có sẵn
-    const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
-      console.log("Available voices:", availableVoices); // Log danh sách voices
-      setVoices(availableVoices);
+  // useEffect(() => {
+  //   // Lấy danh sách giọng đọc có sẵn
+  //   const loadVoices = () => {
+  //     const availableVoices = window.speechSynthesis.getVoices();
+  //     console.log("Available voices:", availableVoices); // Log danh sách voices
+  //     setVoices(availableVoices);
 
-      // Ưu tiên tiếng Việt, fallback sang giọng đầu tiên
-      const vietnameseVoice = availableVoices.find(
-        (voice) => voice.lang === "vi-VN" || voice.name.toLowerCase().includes("vietnamese")
-      );
-      setSelectedVoice(vietnameseVoice || availableVoices[0] || null);
-      if (!vietnameseVoice) {
-        message.warning("Không tìm thấy giọng đọc tiếng Việt, sẽ dùng giọng mặc định.");
-      }
-    };
+  //     // Ưu tiên tiếng Việt, fallback sang giọng đầu tiên
+  //     const vietnameseVoice = availableVoices.find(
+  //       (voice) => voice.lang === "vi-VN" || voice.name.toLowerCase().includes("vietnamese")
+  //     );
+  //     setSelectedVoice(vietnameseVoice || availableVoices[0] || null);
+  //     if (!vietnameseVoice) {
+  //       message.warning("Không tìm thấy giọng đọc tiếng Việt, sẽ dùng giọng mặc định.");
+  //     }
+  //   };
 
-    loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
+  //   loadVoices();
+  //   window.speechSynthesis.onvoiceschanged = loadVoices;
 
-    return () => {
-      window.speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
+  //   return () => {
+  //     window.speechSynthesis.onvoiceschanged = null;
+  //   };
+  // }, []);
 
   // Tự động đọc notification khi có notifications
-  useEffect(() => {
-    if (notifications.length === 0) {
-      setIsSpeaking(false);
-      return;
-    }
-    if (!isSpeaking) {
-      setCurrentReadingIndex(0);
-    }
-  }, [notifications]);
+  // useEffect(() => {
+  //   if (notifications.length === 0) {
+  //     setIsSpeaking(false);
+  //     return;
+  //   }
+  //   if (!isSpeaking) {
+  //     setCurrentReadingIndex(0);
+  //   }
+  // }, [notifications]);
 
-  useEffect(() => {
-    // Khi người dùng click hoặc nhấn phím, cho phép tự động đọc
-    const handleUserInteraction = () => setCanAutoSpeak(true);
-    window.addEventListener('click', handleUserInteraction, { once: true });
-    window.addEventListener('keydown', handleUserInteraction, { once: true });
-    return () => {
-      window.removeEventListener('click', handleUserInteraction);
-      window.removeEventListener('keydown', handleUserInteraction);
-    };
-  }, []);
+  // useEffect(() => {
+  //   // Khi người dùng click hoặc nhấn phím, cho phép tự động đọc
+  //   const handleUserInteraction = () => setCanAutoSpeak(true);
+  //   window.addEventListener('click', handleUserInteraction, { once: true });
+  //   window.addEventListener('keydown', handleUserInteraction, { once: true });
+  //   return () => {
+  //     window.removeEventListener('click', handleUserInteraction);
+  //     window.removeEventListener('keydown', handleUserInteraction);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (canAutoSpeak && notifications.length > 0 && !isSpeaking) {
@@ -358,19 +358,14 @@ const NotificationScreen = () => {
 
   return (
     <div>
-      {!canAutoSpeak && (
-        <Button size="large" type="primary" onClick={() => setCanAutoSpeak(true)} style={{ marginBottom: 16, marginTop: 16 }}>
-          Bấm vào đây để bật đọc thông báo tự động
-        </Button>
-      )}
       <div>
         <Marquee
           content={notifications}
-          onMarqueeChange={(notification) => {
-            if (canAutoSpeak && notification && notification.content) {
-              speakNotification(notification);
-            }
-          }}
+        // onMarqueeChange={(notification) => {
+        //   if (canAutoSpeak && notification && notification.content) {
+        //     speakNotification(notification);
+        //   }
+        // }}
         />
         <div >
           <Row gutter={[0, 16]}>
@@ -532,15 +527,7 @@ const NotificationScreen = () => {
           </Row>
         </div>
       </div>
-      {isSpeaking && (
-        <Button
-          danger
-          onClick={stopSpeaking}
-          style={{ position: "fixed", bottom: "20px", right: "20px" }}
-        >
-          Dừng đọc
-        </Button>
-      )}
+      <TextReader />
     </div>
   );
 };

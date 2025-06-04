@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Map from "./Map/Map";
-import WorkshopDetail from "./components/WorkshopDetail";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Notification from "./components/Notification";
@@ -16,6 +15,8 @@ import AdminRoute from "./components/AdminRoute";
 import RegisterForm from "./components/Register";
 import { getRoleFromToken } from "./utils/jwtUtils";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
+import SpeechAssistant from "./components/TextReader";
+import NoteNoficationModal from './components/NoteNofication/NoteNoficationModal';
 // import TextToSpeech from "./components/TextToSpeech";
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<AdminRoute><RegisterForm /></AdminRoute>} />
           <Route
             path="/map"
@@ -38,14 +39,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/workshop/:id"
-            element={
-              <ProtectedRoute>
-                <WorkshopDetail />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path="/notification"
             element={
@@ -72,7 +66,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <RoleProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
-                  <NoteNofication />
+                  <NoteNoficationModal isOpen={true} onClose={() => window.history.back()} />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             }
@@ -81,7 +75,7 @@ function App() {
             path="/register"
             element={<Register />}
           />
-          {/* <Route path="/text-to-speech" element={<TextToSpeech />} /> */}
+          <Route path="/text11" element={<SpeechAssistant />} />
         </Routes>
 
       </div>

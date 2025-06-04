@@ -63,6 +63,14 @@ interface NotificationRequest {
     custer: Clusters,
     conveyorBelt: ConveyorBelt,
 }
+interface NotificationReadResponse {
+    id: string;
+    code: string;
+    content: string;
+    title: string;
+    oneRead: boolean;
+    readAt: string;
+}
 export const workshopService = {
     // Lấy thông tin workshop theo code
     getWorkshopByCode: async (code: string): Promise<Workshop> => {
@@ -121,6 +129,8 @@ export const workshopService = {
             });
 
             console.log('Notification response:', response.data);
+            console.log('Notification status:', response.status);
+
         } catch (error: any) {
             if (error?.response?.status === 401) {
                 // await refreshToken();
@@ -294,4 +304,29 @@ export const workshopService = {
             }
         }
     },
+    // Tạo danh sách đọc
+    getNotificationReading: async (): Promise<NotificationReadResponse[]> => {
+        try {
+            const token = localStorage.getItem('token');
+            console.log('Token:', token); // Log token để kiểm tra
+
+            const response = await axios.get<NotificationReadResponse[]>(`/thongbao/get_all_notification_read`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response data:', response.data);
+
+            return response.data;
+        } catch (error: any) {
+            console.error('Error in getNotificationReading:', {
+                status: error?.response?.status,
+                message: error?.response?.data?.message || error.message,
+                error: error
+            });
+            throw error;
+        }
+    }
 }; 

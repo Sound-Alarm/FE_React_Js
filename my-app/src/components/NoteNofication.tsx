@@ -45,13 +45,29 @@ const NoteNofication = () => {
         listOfReleaseDatesToSend = [todayName];
         setReleaseDates(listOfReleaseDatesToSend);
       }
+
+      // Format time to HH:mm with default to current time + 2 minutes
+      let timeValue;
+      if (!values.time) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() + 2);
+        timeValue = now.toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } else {
+        timeValue = values.time.format('HH:mm');
+      }
+
       const response = await workshopService.postNotification({
         content: values.nofication,
         typeNotification: notifications.find(item => item.code === values.code) || { id: '', code: '', name: '' },
-        timeAt: values.time,
+        timeAt: timeValue,
         listOfReleaseDates: listOfReleaseDatesToSend,
       });
-      console.log("Phản hồi từ API:", response);
+
+      console.log("Gửi thông báo thành công!");
       message.success("Tạo thông báo thành công!");
       form.resetFields();
       setReleaseDates([]);
@@ -126,15 +142,27 @@ const NoteNofication = () => {
           <Row gutter={[16, 0]}>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
               <Form.Item name="nofication" label="Nhập thông báo">
-                <TextArea placeholder="Nhập thông báo" rows={3} />
+                <TextArea
+                  placeholder="Nhập thông báo"
+                  rows={3}
+                  style={{
+                    maxWidth: '800px',
+                    width: '100%'
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={4} lg={4} xl={4}>
-              <Form.Item name="time" label="Chọn giờ">
+              <Form.Item
+                name="time"
+                label="Chọn giờ"
+                rules={[{ required: true, message: 'Vui lòng chọn giờ' }]}
+              >
                 <TimePicker
                   size="large"
                   placeholder="Chọn giờ"
-                  format="HH:mm:ss"
+                  format="HH:mm"
+                  style={{ width: '100%' }}
                 />
               </Form.Item>
             </Col>
@@ -166,9 +194,9 @@ const NoteNofication = () => {
             <Button size="large" type="primary" htmlType="submit">
               Tạo thông báo
             </Button>
-            <Button style={{ border: " none", boxShadow: "none", textDecoration: "underline", backgroundColor: 'unset' }} size="large" block onClick={() => navigate(-1)}>
+            {/* <Button style={{ border: " none", boxShadow: "none", textDecoration: "underline", backgroundColor: 'unset' }} size="large" block onClick={() => navigate(-1)}>
               Quay lại
-            </Button>
+            </Button> */}
           </Form.Item>
         </Form>
       </div>
